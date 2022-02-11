@@ -1,0 +1,77 @@
+﻿@model IEnumerable<sample_applicaiton.Models.Product>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+@{
+    var products = ViewData["products"] != null ? ViewData["products"] as List<sample_applicaiton.Models.Product>: new List<Product>();
+
+    var pages = ViewData["pages"] != null ? int.Parse(ViewData["pages"].ToString()) : 0;
+
+    var currentPage = ViewData["currentPage"] != null ? int.Parse(ViewData["currentPage"].ToString()): 0;
+
+    var erroorMessages = ViewData["ErrorMessages"] != null ? ViewData["ErrorMessages"] as List<string> : new List<string>();
+} 
+
+@foreach (var error in erroorMessages.Where(x=>x != "The value '' is invalid."))
+{
+    <p class="text-danger">
+        @error
+    </p>
+}
+
+<table class="table table-bordered">
+    <tr>
+        <th>
+            ProductID
+        </th>
+        <th>
+            Brand
+        </th>
+        <th>
+            Product Name
+        </th>
+        <th>
+            Category ID
+        </th>
+        <th>
+            Model Year
+        </th>
+        <th>
+            List Price
+        </th>
+    </tr>
+    @foreach (var product in products)
+    {
+        <tr>
+            <td>
+                @product.ProductId
+            </td>
+            <td>
+                @product.Brand.BrandName
+            </td>
+            <td>
+                @product.ProductName
+            </td>
+            <td>
+                @product.CategoryId
+            </td>
+            <td>
+                @product.ModelYear
+            </td>
+            <td>
+                @product.ListPrice
+            </td>
+        </tr>
+    }
+</table>
+<div class="text-center pagination justify-content-center">
+    <a asp-controller="home" asp-action="index" asp-route-page="0"><<</a>
+    <a asp-controller="home" asp-action="index" asp-route-page="@(currentPage-1)"><</a>
+    @for(int i = 0; i < pages; i++)
+    {
+        <a asp-controller="home" asp-action="index" asp-route-page="@i" class="@(i == currentPage?"active":"inactive")">@(i+1)</a>
+    }
+    <a asp-controller="home" asp-action="index" asp-route-page="@(currentPage + 1)">></a>
+    <a asp-controller="home" asp-action="index" asp-route-page="@(pages-1)">>></a>
+</div>
